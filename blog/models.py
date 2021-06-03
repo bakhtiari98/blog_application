@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -29,14 +30,17 @@ class Post(models.Model):
 							  choices=STATUS_CHOICES,
 							  default='draft')
 
+	
+	objects = models.Manager()
+	published = PublishedManager()
+	tags = TaggableManager()
+
 	class meta:
 		ordering = ('-published',)
 
 	def __str__(self):
 		return self.title
 
-	objects = models.Manager()
-	published = PublishedManager()
 
 	def get_absolute_url(self):
 		return reverse('blog:post_detail',
